@@ -10,8 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BecomeTutorRouteImport } from './routes/become-tutor'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SessionSessionIdRouteImport } from './routes/session.$sessionId'
+import { Route as TutorPayoutsRouteImport } from './routes/tutor.payouts'
 import { Route as TutorsIndexRouteImport } from './routes/tutors.index'
 import { Route as TutorsTutorIdRouteImport } from './routes/tutors.$tutorId'
 
@@ -20,14 +27,49 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BecomeTutorRoute = BecomeTutorRouteImport.update({
   id: '/become-tutor',
   path: '/become-tutor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
+  id: '/session/$sessionId',
+  path: '/session/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorPayoutsRoute = TutorPayoutsRouteImport.update({
+  id: '/tutor/payouts',
+  path: '/tutor/payouts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TutorsIndexRoute = TutorsIndexRouteImport.update({
@@ -43,45 +85,103 @@ const TutorsTutorIdRoute = TutorsTutorIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors': typeof TutorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/become-tutor' | '/how-it-works' | '/tutors/$tutorId' | '/tutors/'
+    | '/'
+    | '/auth'
+    | '/become-tutor'
+    | '/checkout'
+    | '/dashboard'
+    | '/faq'
+    | '/how-it-works'
+    | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
+    | '/tutors/$tutorId'
+    | '/tutors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/become-tutor' | '/how-it-works' | '/tutors/$tutorId' | '/tutors'
+  to:
+    | '/'
+    | '/auth'
+    | '/become-tutor'
+    | '/checkout'
+    | '/dashboard'
+    | '/faq'
+    | '/how-it-works'
+    | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
+    | '/tutors/$tutorId'
+    | '/tutors'
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/become-tutor'
+    | '/checkout'
+    | '/dashboard'
+    | '/faq'
     | '/how-it-works'
+    | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
     | '/tutors/$tutorId'
     | '/tutors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   BecomeTutorRoute: typeof BecomeTutorRoute
+  CheckoutRoute: typeof CheckoutRoute
+  DashboardRoute: typeof DashboardRoute
+  FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  SettingsRoute: typeof SettingsRoute
+  SessionSessionIdRoute: typeof SessionSessionIdRoute
+  TutorPayoutsRoute: typeof TutorPayoutsRoute
   TutorsTutorIdRoute: typeof TutorsTutorIdRoute
   TutorsIndexRoute: typeof TutorsIndexRoute
 }
@@ -95,6 +195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/become-tutor': {
       id: '/become-tutor'
       path: '/become-tutor'
@@ -102,11 +209,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BecomeTutorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session/$sessionId': {
+      id: '/session/$sessionId'
+      path: '/session/$sessionId'
+      fullPath: '/session/$sessionId'
+      preLoaderRoute: typeof SessionSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutor/payouts': {
+      id: '/tutor/payouts'
+      path: '/tutor/payouts'
+      fullPath: '/tutor/payouts'
+      preLoaderRoute: typeof TutorPayoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tutors/': {
@@ -128,8 +277,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   BecomeTutorRoute: BecomeTutorRoute,
+  CheckoutRoute: CheckoutRoute,
+  DashboardRoute: DashboardRoute,
+  FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
+  SettingsRoute: SettingsRoute,
+  SessionSessionIdRoute: SessionSessionIdRoute,
+  TutorPayoutsRoute: TutorPayoutsRoute,
   TutorsTutorIdRoute: TutorsTutorIdRoute,
   TutorsIndexRoute: TutorsIndexRoute,
 }
