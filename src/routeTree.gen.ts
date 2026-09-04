@@ -10,8 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BecomeTutorRouteImport } from './routes/become-tutor'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TutorsIndexRouteImport } from './routes/tutors.index'
 import { Route as TutorsTutorIdRouteImport } from './routes/tutors.$tutorId'
 
@@ -20,14 +24,34 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BecomeTutorRoute = BecomeTutorRouteImport.update({
   id: '/become-tutor',
   path: '/become-tutor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TutorsIndexRoute = TutorsIndexRouteImport.update({
@@ -43,45 +67,82 @@ const TutorsTutorIdRoute = TutorsTutorIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors': typeof TutorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/settings': typeof SettingsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/become-tutor' | '/how-it-works' | '/tutors/$tutorId' | '/tutors/'
+    | '/'
+    | '/auth'
+    | '/become-tutor'
+    | '/dashboard'
+    | '/faq'
+    | '/how-it-works'
+    | '/settings'
+    | '/tutors/$tutorId'
+    | '/tutors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/become-tutor' | '/how-it-works' | '/tutors/$tutorId' | '/tutors'
+  to:
+    | '/'
+    | '/auth'
+    | '/become-tutor'
+    | '/dashboard'
+    | '/faq'
+    | '/how-it-works'
+    | '/settings'
+    | '/tutors/$tutorId'
+    | '/tutors'
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/become-tutor'
+    | '/dashboard'
+    | '/faq'
     | '/how-it-works'
+    | '/settings'
     | '/tutors/$tutorId'
     | '/tutors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   BecomeTutorRoute: typeof BecomeTutorRoute
+  DashboardRoute: typeof DashboardRoute
+  FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  SettingsRoute: typeof SettingsRoute
   TutorsTutorIdRoute: typeof TutorsTutorIdRoute
   TutorsIndexRoute: typeof TutorsIndexRoute
 }
@@ -95,6 +156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/become-tutor': {
       id: '/become-tutor'
       path: '/become-tutor'
@@ -102,11 +170,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BecomeTutorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tutors/': {
@@ -128,8 +217,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   BecomeTutorRoute: BecomeTutorRoute,
+  DashboardRoute: DashboardRoute,
+  FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
+  SettingsRoute: SettingsRoute,
   TutorsTutorIdRoute: TutorsTutorIdRoute,
   TutorsIndexRoute: TutorsIndexRoute,
 }
