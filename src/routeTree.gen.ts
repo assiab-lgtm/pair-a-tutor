@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BecomeTutorRouteImport } from './routes/become-tutor'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SessionSessionIdRouteImport } from './routes/session.$sessionId'
+import { Route as TutorPayoutsRouteImport } from './routes/tutor.payouts'
 import { Route as TutorsIndexRouteImport } from './routes/tutors.index'
 import { Route as TutorsTutorIdRouteImport } from './routes/tutors.$tutorId'
 
@@ -32,6 +35,11 @@ const AuthRoute = AuthRouteImport.update({
 const BecomeTutorRoute = BecomeTutorRouteImport.update({
   id: '/become-tutor',
   path: '/become-tutor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -54,6 +62,16 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SessionSessionIdRoute = SessionSessionIdRouteImport.update({
+  id: '/session/$sessionId',
+  path: '/session/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorPayoutsRoute = TutorPayoutsRouteImport.update({
+  id: '/tutor/payouts',
+  path: '/tutor/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TutorsIndexRoute = TutorsIndexRouteImport.update({
   id: '/tutors/',
   path: '/tutors/',
@@ -69,10 +87,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
@@ -80,10 +101,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors': typeof TutorsIndexRoute
 }
@@ -92,10 +116,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/become-tutor': typeof BecomeTutorRoute
+  '/checkout': typeof CheckoutRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
   '/settings': typeof SettingsRoute
+  '/session/$sessionId': typeof SessionSessionIdRoute
+  '/tutor/payouts': typeof TutorPayoutsRoute
   '/tutors/$tutorId': typeof TutorsTutorIdRoute
   '/tutors/': typeof TutorsIndexRoute
 }
@@ -105,10 +132,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/become-tutor'
+    | '/checkout'
     | '/dashboard'
     | '/faq'
     | '/how-it-works'
     | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
     | '/tutors/$tutorId'
     | '/tutors/'
   fileRoutesByTo: FileRoutesByTo
@@ -116,10 +146,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/become-tutor'
+    | '/checkout'
     | '/dashboard'
     | '/faq'
     | '/how-it-works'
     | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
     | '/tutors/$tutorId'
     | '/tutors'
   id:
@@ -127,10 +160,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/become-tutor'
+    | '/checkout'
     | '/dashboard'
     | '/faq'
     | '/how-it-works'
     | '/settings'
+    | '/session/$sessionId'
+    | '/tutor/payouts'
     | '/tutors/$tutorId'
     | '/tutors/'
   fileRoutesById: FileRoutesById
@@ -139,10 +175,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   BecomeTutorRoute: typeof BecomeTutorRoute
+  CheckoutRoute: typeof CheckoutRoute
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
   SettingsRoute: typeof SettingsRoute
+  SessionSessionIdRoute: typeof SessionSessionIdRoute
+  TutorPayoutsRoute: typeof TutorPayoutsRoute
   TutorsTutorIdRoute: typeof TutorsTutorIdRoute
   TutorsIndexRoute: typeof TutorsIndexRoute
 }
@@ -168,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/become-tutor'
       fullPath: '/become-tutor'
       preLoaderRoute: typeof BecomeTutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -198,6 +244,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/session/$sessionId': {
+      id: '/session/$sessionId'
+      path: '/session/$sessionId'
+      fullPath: '/session/$sessionId'
+      preLoaderRoute: typeof SessionSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutor/payouts': {
+      id: '/tutor/payouts'
+      path: '/tutor/payouts'
+      fullPath: '/tutor/payouts'
+      preLoaderRoute: typeof TutorPayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tutors/': {
       id: '/tutors/'
       path: '/tutors'
@@ -219,10 +279,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   BecomeTutorRoute: BecomeTutorRoute,
+  CheckoutRoute: CheckoutRoute,
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
   SettingsRoute: SettingsRoute,
+  SessionSessionIdRoute: SessionSessionIdRoute,
+  TutorPayoutsRoute: TutorPayoutsRoute,
   TutorsTutorIdRoute: TutorsTutorIdRoute,
   TutorsIndexRoute: TutorsIndexRoute,
 }
