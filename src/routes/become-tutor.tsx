@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, FileUp, Mic, Square } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { CheckCircle2, FileUp, GraduationCap, Mic, ShieldCheck, Square } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,22 +9,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { GRADES, SUBJECTS, splitPayment } from "@/lib/studypair";
+import { useApplication } from "@/lib/store";
 
 export const Route = createFileRoute("/become-tutor")({
   head: () => ({
     meta: [
-      { title: "Devenir tuteur lycéen — StudyPair" },
+      { title: "Devenir tuteur — lycéens, étudiants et diplômés | StudyPair" },
       {
         name: "description",
         content:
-          "Lycéen avec mention Très Bien au Brevet ? Créez votre profil StudyPair, choisissez vos matières et gagnez 80 % du tarif de chaque séance.",
+          "Mention Bien ou Très Bien au Brevet et d'excellents résultats dans votre matière ? Candidatez sur StudyPair : identité vérifiée, relevé de notes, test audio de 2 minutes, et 80 % du tarif reversé.",
       },
-      { property: "og:title", content: "Devenir tuteur lycéen — StudyPair" },
+      { property: "og:title", content: "Devenir tuteur — StudyPair" },
       {
         property: "og:description",
-        content: "Inscription en 2 minutes : matières, créneaux, vérification du relevé du Brevet.",
+        content:
+          "Ouvert aux lycéens, étudiants du supérieur et diplômés. Vérification d'identité et 80 % du tarif pour vous.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,11 +43,28 @@ export const Route = createFileRoute("/become-tutor")({
 });
 
 const MAX_SECONDS = 120;
+const MIN_SECONDS = 20;
+
+const PROFILES = [
+  { id: "lycee", label: "Lycéen(ne)" },
+  { id: "superieur", label: "Étudiant(e) du supérieur" },
+  { id: "diplome", label: "Diplômé(e)" },
+] as const;
+
+const MENTIONS = [
+  { id: "bien", label: "Mention Bien au Brevet" },
+  { id: "tres-bien", label: "Mention Très Bien au Brevet" },
+] as const;
 
 function BecomeTutor() {
+  const navigate = useNavigate();
+  const [, setApplication] = useApplication();
+  const [profile, setProfile] = useState<string>("lycee");
+  const [mention, setMention] = useState<string>("tres-bien");
   const [subjects, setSubjects] = useState<string[]>([]);
   const [grades, setGrades] = useState<string[]>([]);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [idFile, setIdFile] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<string | null>(null);
   const [recording, setRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [recorded, setRecorded] = useState(false);
@@ -70,17 +96,31 @@ function BecomeTutor() {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!fileName) {
-      toast.error("Ajoutez votre relevé de notes du Brevet pour la vérification.");
-      return;
-    }
     if (subjects.length === 0) {
-      toast.error("Sélectionnez au moins une matière.");
+      toast.error("Sélectionnez au moins une matière enseignée.");
       return;
     }
+    if (grades.length === 0) {
+      toast.error("Sélectionnez au moins un niveau d'élève.");
+      return;
+    }
+    if (!idFile) {
+      toast.error("La pièce d'identité (CNI ou passeport) est obligatoire.");
+      return;
+    }
+    if (!transcript) {
+      toast.error("Ajoutez votre relevé de notes ou votre diplôme.");
+      return;
+    }
+    if (!recorded || seconds < MIN_SECONDS) {
+      toast.error("Enregistrez votre présentation audio (20 secondes minimum, 2 minutes max).");
+      return;
+    }
+    setApplication({ submittedAt: new Date().toISOString(), subjects });
     toast.success("Candidature envoyée !", {
-      description: "Vérification du relevé sous 24 h, puis mise en ligne de votre profil.",
+      description: "Vérification sous 24 h. Renseignez vos coordonnées bancaires en attendant.",
     });
+    navigate({ to: "/tutor/payouts" });
   }
 
   return (
@@ -91,34 +131,110 @@ function BecomeTutor() {
           <div>
             <h1 className="text-3xl font-bold">Devenir tuteur</h1>
             <p className="mt-2 text-muted-foreground">
-              Inscription en 2 minutes. Votre profil reste anonyme : prénom + initiale du nom.
+              Ouvert aux lycéens, étudiants du supérieur et diplômés. Votre profil reste anonyme :
+              prénom + initiale du nom.
             </p>
           </div>
 
+          <Card className="border-accent/40 bg-accent/5">
+            <CardContent className="p-5">
+              <h2 className="flex items-center gap-2 font-semibold">
+                <GraduationCap className="size-4 text-accent" /> Critères d'éligibilité
+              </h2>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li>· Lycéen, étudiant du supérieur ou diplômé.</li>
+                <li>· Mention Bien ou Très Bien au Brevet des collèges.</li>
+                <li>· Excellents résultats dans la ou les matières enseignées.</li>
+                <li>· Pièce d'identité et justificatif académique vérifiés par notre équipe.</li>
+              </ul>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardContent className="grid gap-4 p-5 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <h2 className="font-semibold">1. Informations personnelles</h2>
+              </div>
               <div>
                 <Label htmlFor="first">Prénom</Label>
-                <Input id="first" required placeholder="Léa" className="mt-1.5" />
+                <Input id="first" required maxLength={50} placeholder="Léa" className="mt-1.5" />
               </div>
               <div>
                 <Label htmlFor="initial">Initiale du nom</Label>
                 <Input id="initial" required maxLength={1} placeholder="M" className="mt-1.5" />
               </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  maxLength={255}
+                  placeholder="vous@exemple.fr"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
+                <Label htmlFor="birth">Date de naissance</Label>
+                <Input id="birth" type="date" required className="mt-1.5" />
+              </div>
+              <div>
+                <Label htmlFor="profile">Votre situation</Label>
+                <Select value={profile} onValueChange={setProfile}>
+                  <SelectTrigger id="profile" className="mt-1.5 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROFILES.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="mention">Résultat au Brevet</Label>
+                <Select value={mention} onValueChange={setMention}>
+                  <SelectTrigger id="mention" className="mt-1.5 w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MENTIONS.map((m) => (
+                      <SelectItem key={m.id} value={m.id}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="sm:col-span-2">
-                <Label htmlFor="level">Classe actuelle</Label>
-                <Input id="level" required placeholder="Terminale · Spé Maths" className="mt-1.5" />
+                <Label htmlFor="level">Niveau d'études actuel / diplôme</Label>
+                <Input
+                  id="level"
+                  required
+                  maxLength={100}
+                  placeholder="Terminale · Spé Maths — ou L2 Physique, Master…"
+                  className="mt-1.5"
+                />
               </div>
               <div className="sm:col-span-2">
                 <Label htmlFor="bio">Votre approche (2 phrases)</Label>
-                <Textarea id="bio" className="mt-1.5" rows={3} placeholder="J'explique pas à pas…" />
+                <Textarea
+                  id="bio"
+                  className="mt-1.5"
+                  rows={3}
+                  maxLength={400}
+                  placeholder="J'explique pas à pas…"
+                />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-5">
-              <Label>Matières enseignées</Label>
+              <h2 className="font-semibold">Matières et niveaux</h2>
+              <Label className="mt-4 block">Matières enseignées</Label>
               <div className="mt-3 flex flex-wrap gap-2">
                 {SUBJECTS.map((s) => (
                   <Button
@@ -151,27 +267,31 @@ function BecomeTutor() {
 
           <Card>
             <CardContent className="p-5">
-              <Label htmlFor="brevet">Relevé de notes du Brevet (mention Très Bien)</Label>
+              <div className="flex items-center gap-2">
+                <h2 className="font-semibold">2. Vérification d'identité</h2>
+                <Badge variant="secondary">Obligatoire</Badge>
+              </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                PDF ou photo. Document confidentiel, utilisé uniquement pour la vérification.
+                Carte nationale d'identité ou passeport, recto-verso lisible. Document confidentiel,
+                supprimé après vérification.
               </p>
               <label
-                htmlFor="brevet"
+                htmlFor="idfile"
                 className="mt-3 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border p-4 text-sm transition-colors hover:bg-secondary"
               >
-                {fileName ? (
+                {idFile ? (
                   <CheckCircle2 className="size-5 text-accent" />
                 ) : (
                   <FileUp className="size-5 text-muted-foreground" />
                 )}
-                <span>{fileName ?? "Cliquez pour téléverser votre relevé"}</span>
+                <span>{idFile ?? "Téléverser ma CNI ou mon passeport"}</span>
               </label>
               <input
-                id="brevet"
+                id="idfile"
                 type="file"
                 accept="image/*,application/pdf"
                 className="hidden"
-                onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
+                onChange={(e) => setIdFile(e.target.files?.[0]?.name ?? null)}
               />
             </CardContent>
           </Card>
@@ -179,12 +299,43 @@ function BecomeTutor() {
           <Card>
             <CardContent className="p-5">
               <div className="flex items-center gap-2">
-                <Label>Test audio rapide</Label>
-                <Badge variant="outline">Optionnel</Badge>
+                <h2 className="font-semibold">3. Justificatifs académiques</h2>
+                <Badge variant="secondary">Obligatoire</Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                2 minutes maximum pour présenter votre approche. Les profils avec audio reçoivent
-                plus de réservations.
+                Relevé de notes du Brevet (mention Bien ou Très Bien), bulletins récents ou diplôme
+                dans vos matières.
+              </p>
+              <label
+                htmlFor="transcript"
+                className="mt-3 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border p-4 text-sm transition-colors hover:bg-secondary"
+              >
+                {transcript ? (
+                  <CheckCircle2 className="size-5 text-accent" />
+                ) : (
+                  <FileUp className="size-5 text-muted-foreground" />
+                )}
+                <span>{transcript ?? "Téléverser mon relevé de notes ou diplôme"}</span>
+              </label>
+              <input
+                id="transcript"
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={(e) => setTranscript(e.target.files?.[0]?.name ?? null)}
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-5">
+              <div className="flex items-center gap-2">
+                <h2 className="font-semibold">4. Test audio de 2 minutes</h2>
+                <Badge variant="secondary">Obligatoire</Badge>
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Présentez votre pédagogie : comment expliquez-vous une notion difficile ? Cet extrait
+                est diffusé sur votre profil (20 s minimum, 2 min maximum).
               </p>
               <div className="mt-4 flex items-center gap-3">
                 <Button
@@ -214,7 +365,8 @@ function BecomeTutor() {
               </div>
               {recorded && (
                 <p className="mt-3 flex items-center gap-2 text-sm text-accent">
-                  <CheckCircle2 className="size-4" /> Enregistrement prêt à être joint au profil.
+                  <CheckCircle2 className="size-4" /> Enregistrement prêt
+                  {seconds < MIN_SECONDS ? " — trop court, refaites un essai." : " à être joint au profil."}
                 </p>
               )}
             </CardContent>
@@ -223,6 +375,10 @@ function BecomeTutor() {
           <Button type="submit" size="lg" className="w-full">
             Envoyer ma candidature
           </Button>
+          <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <ShieldCheck className="size-4 text-accent" /> Vérification humaine sous 24 h avant mise
+            en ligne du profil.
+          </p>
         </form>
 
         <Card className="h-fit lg:sticky lg:top-24">
@@ -238,9 +394,8 @@ function BecomeTutor() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 rounded-lg bg-secondary p-3 text-xs text-muted-foreground">
-              80 % du tarif vous revient, versé automatiquement après chaque séance terminée. 20 %
-              couvrent la plateforme, le paiement et le support.
+            <p className="mt-4 text-xs text-muted-foreground">
+              80 % du tarif vous revient, versés automatiquement après chaque séance.
             </p>
           </CardContent>
         </Card>
