@@ -1,15 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { useAccount } from "@/lib/store";
 
 const links = [
   { to: "/tutors", label: "Trouver un tuteur" },
   { to: "/how-it-works", label: "Comment ça marche" },
+  { to: "/faq", label: "FAQ" },
   { to: "/dashboard", label: "Mes séances" },
 ] as const;
 
 export function SiteHeader() {
+  const { account } = useAccount();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4">
@@ -34,10 +37,22 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <ThemeToggle />
-          <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
-            <Link to="/become-tutor">Devenir tuteur</Link>
+          <Button asChild variant="ghost" size="icon" aria-label="Paramètres">
+            <Link to="/settings">
+              <Settings className="size-4" />
+            </Link>
           </Button>
+          {account ? (
+            <Button asChild variant="outline" size="sm">
+              <Link to={account.role === "tutor" ? "/tutor/payouts" : "/dashboard"}>
+                <User className="size-4" /> {account.name}
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth">Connexion</Link>
+            </Button>
+          )}
           <Button asChild size="sm">
             <Link to="/tutors">Réserver</Link>
           </Button>
@@ -52,12 +67,18 @@ export function SiteFooter() {
     <footer className="border-t border-border/70 py-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} StudyPair — mise en relation lycéens / collégiens.</p>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Link to="/how-it-works" className="hover:text-foreground">
             Tarifs & commission
           </Link>
+          <Link to="/faq" className="hover:text-foreground">
+            FAQ
+          </Link>
           <Link to="/become-tutor" className="hover:text-foreground">
             Devenir tuteur
+          </Link>
+          <Link to="/settings" className="hover:text-foreground">
+            Paramètres
           </Link>
         </div>
       </div>

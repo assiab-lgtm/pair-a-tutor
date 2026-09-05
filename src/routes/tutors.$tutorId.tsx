@@ -72,11 +72,12 @@ function TutorProfile() {
       toast.error("Choisissez d'abord un créneau.");
       return;
     }
-    toast.success(`Séance réservée — ${slot} · ${price} €`, {
-      description: "Paiement autorisé. Le tuteur reçoit 80 % après la séance.",
+    navigate({
+      to: "/checkout",
+      search: { tutorId: tutor.id, grade, slot, subject: tutor.subjects[0]! },
     });
-    navigate({ to: "/session/$sessionId", params: { sessionId: tutor.id } });
   }
+
 
   return (
     <div className="flex min-h-screen flex-col">
