@@ -10,7 +10,7 @@ import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { gradeLabel, priceFor, splitPayment, TUTORS, tutorName, type Grade } from "@/lib/studypair";
 import { useAccount, useBookings } from "@/lib/store";
 
-type Search = { tutorId: string; grade: Grade; slot: string; subject?: string };
+type Search = { tutorId: string; grade: Grade; slot: string; subject?: string | undefined };
 
 export const Route = createFileRoute("/checkout")({
   validateSearch: (search: Record<string, unknown>): Search => ({
